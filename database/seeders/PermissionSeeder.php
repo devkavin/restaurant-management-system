@@ -15,7 +15,16 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         // Create Permissions
-        $permissions = ['manage-concessions', 'manage-orders', 'manage-kitchen', 'view-orders', 'update-order-status'];
+        // Create Permissions
+        $permissions = [
+            'manage-concessions',
+            'manage-orders',
+            'manage-kitchen',
+            'view-orders',
+            'update-order-status',
+            'manage-staff'
+        ];
+
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
@@ -24,7 +33,17 @@ class PermissionSeeder extends Seeder
         $adminRole = Role::create(['name' => 'Admin']);
         $staffRole = Role::create(['name' => 'Staff']);
 
-        $adminRole->givePermissionTo(['manage-concessions', 'manage-orders', 'manage-kitchen']);
-        $staffRole->givePermissionTo(['view-orders', 'update-order-status', 'manage-kitchen']);
+        $adminRole->givePermissionTo([
+            'manage-concessions',
+            'manage-orders',
+            'manage-kitchen',
+            'manage-staff'
+        ]);
+
+        $staffRole->givePermissionTo([
+            'view-orders',
+            'update-order-status',
+            'manage-kitchen'
+        ]);
     }
 }
