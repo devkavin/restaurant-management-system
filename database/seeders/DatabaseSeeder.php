@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Concession;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,10 +14,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
         $this->call(PermissionSeeder::class);
+        $this->call(ConcessionsSeeder::class);
+        Concession::factory(1000)->create();
         $this->createAdminUser();
         $this->createStaffUser();
+        User::factory(50)->create()->each(function ($user) {
+            // default role is Staff
+            $user->assignRole('Staff');
+        });
     }
 
     private function createAdminUser(): void
