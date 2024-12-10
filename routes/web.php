@@ -23,11 +23,14 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::group(['middleware' => ['role:Admin']], function () {
-    Route::resource('concessions', ConcessionController::class);
+
     Route::resource('users', UserController::class);
 });
 
 Route::group(['middleware' => ['role:Staff|Admin']], function () {
+    Route::resource('concessions', ConcessionController::class);
+    // destroy concession
+    Route::delete('/concessions/{concession}/destroy', [ConcessionController::class, 'destroy'])->name('concessions.destroy');
     Route::resource('orders', OrderController::class);
     Route::get('/kitchen', [KitchenController::class, 'index'])->name('kitchen.index');
 });
