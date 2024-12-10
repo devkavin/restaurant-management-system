@@ -4,7 +4,8 @@ use App\Http\Controllers\ConcessionController;
 use App\Http\Controllers\KitchenController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,7 +24,7 @@ Route::middleware('auth')->group(function () {
 
 Route::group(['middleware' => ['role:Admin']], function () {
     Route::resource('concessions', ConcessionController::class);
-    Route::resource('staff', StaffController::class);
+    Route::resource('users', UserController::class);
 });
 
 Route::group(['middleware' => ['role:Staff|Admin']], function () {
