@@ -16,8 +16,13 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     {{-- staff index --}}
-                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
-                        {{ __('Staff Management') }}
+                    @if (Auth::user()->role == 'admin')
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                            {{ __('Staff Management') }}
+                        </x-nav-link>
+                    @endif
+                    <x-nav-link :href="route('concessions.index')" :active="request()->routeIs('concessions.index')">
+                        {{ __('Concessions') }}
                     </x-nav-link>
                 </div>
             </div>
