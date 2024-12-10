@@ -15,7 +15,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $users = User::with('roles')->get();
+            $users = User::with('roles')->paginate(10);
             return view('users.index', compact('users'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while fetching users. ' . $e->getMessage());

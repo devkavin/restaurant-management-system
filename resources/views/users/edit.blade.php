@@ -33,9 +33,10 @@
                             <x-input-label for="role" :value="__('Role')" />
 
                             <select name="role" id="role" class="block mt-1 w-full">
+                                <option value="" selected>{{ __('Select Role') }}</option>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->name }}"
-                                        @if ($user->roles->first()->id === $role->id) selected @endif>
+                                        @if ($user->roles->first() && $user->roles->first()->id === $role->id) selected @endif>
                                         {{ $role->name }}
                                     </option>
                                 @endforeach

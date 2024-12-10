@@ -51,11 +51,21 @@
                                             <x-primary-button
                                                 class="text-indigo-600 hover:text-indigo-900">Edit</x-primary-button>
                                         </a>
-                                        <a href="{{ route('users.destroy', $user) }}"
-                                            onclick="return confirm('Are you sure you want to delete this user?')">
-                                            <x-secondary-button
-                                                class="text-indigo-600 hover:text-indigo-900">Delete</x-secondary-button>
-                                        </a>
+
+                                        <!-- Delete Form -->
+                                        <form action="{{ route('users.destroy', $user) }}" method="POST"
+                                            class="inline">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <!-- Use regular button tag for form submission -->
+                                            <x-secondary-button type="submit"
+                                                class="bg-red-600 hover:bg-red-800 hover:text-white px-4 py-2 rounded"
+                                                onclick="return confirm('Are you sure you want to delete this user?')">
+                                                Delete
+                                            </x-secondary-button>
+
+                                        </form>
                                     </td>
                                     </td>
 
@@ -63,12 +73,11 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="mt-4">
+                        {{ $users->links() }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
-
-<script>
-    console.log(@json($users));
-</script>
