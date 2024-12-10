@@ -43,6 +43,7 @@ class PermissionSeeder extends Seeder
         $staffRole->givePermissionTo([
             'view-orders',
             'update-order-status',
+            'manage-concessions',
             'manage-kitchen'
         ]);
     }
