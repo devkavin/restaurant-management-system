@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
-class StaffController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +15,10 @@ class StaffController extends Controller
     public function index()
     {
         try {
-            $staff = User::all();
-            return view('staff.index', compact('staff'));
+            $users = User::with('roles')->get();
+            return view('users.index', compact('users'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while fetching staff.');
+            return redirect()->back()->with('error', 'An error occurred while fetching users. ' . $e->getMessage());
         }
     }
 
@@ -29,9 +29,9 @@ class StaffController extends Controller
     {
         try {
             $roles = Role::all();
-            return view('staff.create', compact('roles'));
+            return view('users.create', compact('roles'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while fetching roles.');
+            return redirect()->back()->with('error', 'An error occurred while fetching roles. ' . $e->getMessage());
         }
     }
 
@@ -59,24 +59,24 @@ class StaffController extends Controller
                 $user->assignRole($request->role);
             }); // Used DB transaction to rollback if any error occurs
 
-            return redirect()->route('staff.index')->with('success', 'Staff created successfully with role: ' . $request->role);
+            return redirect()->route('users.index')->with('success', 'user created successfully with role: ' . $request->role);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while creating staff.');
+            return redirect()->back()->with('error', 'An error occurred while creating user. ' . $e->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        try {
-            $staff = User::findOrFail($id);
-            return view('staff.show', compact('staff'));
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while fetching staff.');
-        }
-    }
+    // public function show(string $id)
+    // {
+    //     try {
+    //         $users = User::findOrFail($id);
+    //         return view('users.show', compact('user'));
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'An error occurred while fetching user.');
+    //     }
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -85,9 +85,9 @@ class StaffController extends Controller
     {
         try {
             $roles = Role::all();
-            return view('staff.edit', compact('user', 'roles'));
+            return view('users.edit', compact('user', 'roles'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while fetching staff.');
+            return redirect()->back()->with('error', 'An error occurred while fetching user. ' . $e->getMessage());
         }
     }
 
@@ -100,15 +100,16 @@ class StaffController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email,' . $user->id,
-                'role' => 'required',
+                'role' => 'required'
             ]);
 
             $user->update($request->only('name', 'email'));
+
             $user->syncRoles($request->role);
 
-            return redirect()->route('staff.index')->with('success', 'Staff member updated successfully.');
+            return redirect()->route('users.index')->with('success', 'user updated successfully.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while updating staff.');
+            return redirect()->back()->with('error', 'An error occurred while updating user. ' . $e->getMessage());
         }
     }
 
@@ -119,9 +120,9 @@ class StaffController extends Controller
     {
         try {
             $user->delete();
-            return redirect()->route('staff.index')->with('success', 'Staff member deleted successfully.');
+            return redirect()->route('users.index')->with('success', 'user deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred while deleting staff.');
+            return redirect()->back()->with('error', 'An error occurred while deleting user. ' . $e->getMessage());
         }
     }
 }
