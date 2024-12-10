@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Concession;
 use Illuminate\Http\Request;
+use Storage;
 
 class ConcessionController extends Controller
 {
@@ -13,7 +14,7 @@ class ConcessionController extends Controller
     public function index()
     {
         try {
-            $concessions = Concession::all();
+            $concessions = Concession::paginate(10);
             return view('concessions.index', compact('concessions'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while fetching concessions. ' . $e->getMessage());
@@ -40,19 +41,22 @@ class ConcessionController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'description' => 'required|string',
+                'description' => 'nullable|string',
                 'image' => 'required|image',
                 'price' => 'required|numeric'
             ]);
 
-            $image = $request->file('image');
-            $image_name = time() . '.' . $image->extension();
-            $image->move(public_path('images'), $image_name);
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('images/concessions', 'public');
+            } else {
+                // Set default image if no image is uploaded
+                $path = 'placeholder.svg';
+            }
 
             Concession::create([
                 'name' => $request->name,
                 'description' => $request->description,
-                'image' => $image_name,
+                'image' => $path,
                 'price' => $request->price
             ]);
 
@@ -90,18 +94,25 @@ class ConcessionController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'description' => 'required|string',
+                'description' => 'nullable|string',
+                'image' => 'required|image',
                 'price' => 'required|numeric'
             ]);
 
             $concession->update(request()->only('name', 'description', 'price'));
 
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $image_name = time() . '.' . $image->extension();
-                $image->move(public_path('images'), $image_name);
-                $concession->update(['image' => $image_name]);
+                // delete the old image file
+                if ($concession->image != 'placeholder.svg') {
+                    Storage::disk('public')->delete($concession->image);
+                }
+                $path = $request->file('image')->store('images/concessions', 'public');
+                $concession->update(['image' => $path]);
+            } else {
+                // default image if no image is uploaded
+                $concession->update(['image' => 'placeholder.svg']);
             }
+
 
             return redirect()->route('concessions.index')->with('success', 'Concession updated successfully.');
         } catch (\Exception $e) {
@@ -116,6 +127,11 @@ class ConcessionController extends Controller
     {
         try {
             $concession->delete();
+
+            // Delete the image file
+            if ($concession->image != 'placeholder.svg') {
+                Storage::disk('public')->delete($concession->image);
+            }
             return redirect()->route('concessions.index')->with('success', 'Concession deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while deleting concession. ' . $e->getMessage());
