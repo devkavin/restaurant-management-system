@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendOrderToKitchen;
 use App\Models\Concession;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class OrderController extends Controller
 {
@@ -113,6 +116,12 @@ class OrderController extends Controller
 
             // Bulk attach all concessions
             $order->concessions()->attach($concessionsToAttach);
+
+            $sendToKitchenTime = Carbon::parse($request->send_to_kitchen_time);
+            $delayInSeconds = $sendToKitchenTime->diffInSeconds(Carbon::now());
+
+            // Dispatch job with the delay
+            SendOrderToKitchen::dispatch($order)->delay(now()->addSeconds($delayInSeconds));
 
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
         } catch (\Exception $e) {

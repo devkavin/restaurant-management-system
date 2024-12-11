@@ -68,7 +68,7 @@
                                             <form action="{{ route('orders.send-to-kitchen', $order) }}" method="POST"
                                                 class="inline">
                                                 @csrf
-                                                @method('PATCH')
+                                                @method('POST')
                                                 <x-primary-button class="text-indigo-600 hover:text-indigo-900">
                                                     Send to Kitchen
                                                 </x-primary-button>
