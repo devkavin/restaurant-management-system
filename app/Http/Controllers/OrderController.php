@@ -63,20 +63,16 @@ class OrderController extends Controller
     //             'status' => 'Pending',
     //         ]);
 
-    //         // Group the concessions by their IDs and sum the quantities
     //         $concessions = $request->concessions;
     //         $pivotData = [];
 
-    //         // Loop through the concessions and prepare the pivot data
     //         foreach ($concessions as $concession) {
     //             $concessionId = $concession['id'];
     //             $quantity = $concession['quantity'];
 
-    //             // If the concession already exists in the pivot data, sum the quantities
     //             if (isset($pivotData[$concessionId])) {
     //                 $pivotData[$concessionId]['quantity'] += $quantity;
     //             } else {
-    //                 // Otherwise, add a new entry
     //                 $pivotData[$concessionId] = [
     //                     'order_id' => $order->id,
     //                     'concession_id' => $concessionId,
@@ -87,7 +83,6 @@ class OrderController extends Controller
     //             }
     //         }
 
-    //         // Insert the data in bulk into the pivot table
     //         DB::table('order_concession')->insert(array_values($pivotData));
 
     //         return redirect()->route('orders.index')->with('success', 'Order created successfully.');

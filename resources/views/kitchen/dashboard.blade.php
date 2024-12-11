@@ -5,6 +5,8 @@
         </h2>
     </x-slot>
 
+    <x-alert />
+
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">

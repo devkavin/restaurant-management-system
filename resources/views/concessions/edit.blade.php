@@ -15,7 +15,7 @@
                     <form method="POST" action="{{ route('concessions.update', $concession) }}"
                         enctype="multipart/form-data">
                         @csrf
-                        @method('PUT') <!-- Important to specify PUT method for updates -->
+                        @method('PUT')
 
                         <div class="mt-4">
                             <x-input-label for="name" :value="__('Name')" />

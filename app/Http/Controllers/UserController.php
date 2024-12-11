@@ -57,7 +57,7 @@ class UserController extends Controller
                 ]);
 
                 $user->assignRole($request->role);
-            }); // Used DB transaction to rollback if any error occurs
+            }); // used DB transaction to rollback if any error occurs
 
             return redirect()->route('users.index')->with('success', 'user created successfully with role: ' . $request->role);
         } catch (\Exception $e) {

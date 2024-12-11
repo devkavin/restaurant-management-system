@@ -41,7 +41,8 @@
                                 <tr>
                                     <td class="px-6 py-4 whitespace-no-wrap">{{ $concession->name }}</td>
                                     <td class="px-6 py-4 whitespace-no-wrap">
-                                        {{ $concession->description ?? 'No description' }}</td>
+                                        {{ Str::limit($concession->description ?? 'No description', 50) }}
+                                    </td>
                                     <td class="px-6 py-4 whitespace-no-wrap">
                                         <img src="{{ Storage::url($concession->image) }}" alt="{{ $concession->name }}"
                                             class="w-16 h-16 object-cover rounded">
