@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->dateTime('send_to_kitchen_time');
-            $table->enum('status', ['Pending', 'In-Progress', 'Completed'])->default('Pending');
+            $table->enum('status', ['Pending', 'In-Progress', 'Completed', 'Cancelled'])->default('Pending');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
