@@ -117,7 +117,7 @@ class OrderController extends Controller
                 $concessionsToAttach[$concession['id']] = ['quantity' => $concession['quantity']];
             }
 
-            // Bulk attach all concessions
+            // bulk attach all concessions to minimize db queries
             $order->concessions()->attach($concessionsToAttach);
 
             $sendToKitchenTime = Carbon::parse($request->send_to_kitchen_time);
