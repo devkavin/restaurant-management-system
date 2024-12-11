@@ -34,6 +34,8 @@ Route::group(['middleware' => ['role:Staff|Admin']], function () {
     Route::post('orders/{order}/send-to-kitchen', [OrderController::class, 'sendToKitchen'])->name('orders.send-to-kitchen');
 
     Route::get('/kitchen', [KitchenController::class, 'index'])->name('kitchen.index');
+    Route::get('/kitchen/orders', [KitchenController::class, 'index'])->name('kitchen.orders.index');
+    Route::patch('/kitchen/orders/{order}', [KitchenController::class, 'update'])->name('kitchen.orders.update');
 });
 
 require __DIR__ . '/auth.php';
