@@ -10,4 +10,9 @@ class Concession extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'description', 'image', 'price'];
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_concession');
+    }
 }
