@@ -116,9 +116,8 @@ class OrderController extends Controller
 
             // Bulk attach all concessions
             $order->concessions()->attach($concessionsToAttach);
-
             $sendToKitchenTime = Carbon::parse($request->send_to_kitchen_time);
-            $delayInSeconds = $sendToKitchenTime->diffInSeconds(Carbon::now());
+            $delayInSeconds = $sendToKitchenTime->isPast() ? 0 : $sendToKitchenTime->diffInSeconds(Carbon::now());
 
             // Dispatch job with the delay
             SendOrderToKitchen::dispatch($order)->delay(now()->addSeconds($delayInSeconds));
