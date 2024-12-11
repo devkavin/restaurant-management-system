@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('concession_id');
+            $table->integer('quantity')->default(1);
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('concession_id')->references('id')->on('concessions')->onDelete('cascade');
             $table->timestamps();
