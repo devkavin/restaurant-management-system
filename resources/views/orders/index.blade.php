@@ -57,7 +57,8 @@
                                             {{ $order->status }}
                                         </x-status-label>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap">{{ $order->total_cost }}</td>
+                                    <td class="px-6 py-4 whitespace-no-wrap">${{ number_format($order->total_cost, 2) }}
+                                    </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
                                         @if ($order->status == 'Pending')
                                             <form action="{{ route('orders.send-to-kitchen', $order) }}" method="POST"
