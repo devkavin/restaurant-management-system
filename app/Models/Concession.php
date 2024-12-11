@@ -13,6 +13,7 @@ class Concession extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'order_concession');
+        return $this->belongsToMany(Order::class, 'order_concession')
+            ->withPivot('quantity');
     }
 }
