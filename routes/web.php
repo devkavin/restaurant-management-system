@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('kitchen.dashboard');
+    return view('welcome');
 });
 
 Route::get('/dashboard', function () {
