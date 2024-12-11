@@ -16,13 +16,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(PermissionSeeder::class);
         $this->call(ConcessionsSeeder::class);
-        Concession::factory(1000)->create();
         $this->createAdminUser();
         $this->createStaffUser();
         User::factory(50)->create()->each(function ($user) {
             // default role is Staff
             $user->assignRole('Staff');
         });
+        $this->call(OrderSeeder::class);
     }
 
     private function createAdminUser(): void
