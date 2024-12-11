@@ -25,6 +25,31 @@ class KitchenController extends Controller
         }
     }
 
+    public function dashboard()
+    {
+        try {
+            // to minimize db queries
+            $orderCounts = Order::selectRaw('
+                sum(case when status = "Pending" then 1 else 0 end) as pendingOrders,
+                sum(case when status = "In-Progress" then 1 else 0 end) as inProgressOrders,
+                sum(case when status = "Completed" then 1 else 0 end) as completedOrders,
+                sum(case when status = "Cancelled" then 1 else 0 end) as cancelledOrders
+            ')->first();
+
+            $recentOrders = Order::with('concessions')->orderBy('created_at', 'desc')->take(5)->get();
+
+            return view('kitchen.dashboard', [
+                'pendingOrders' => $orderCounts->pendingOrders,
+                'inProgressOrders' => $orderCounts->inProgressOrders,
+                'completedOrders' => $orderCounts->completedOrders,
+                'cancelledOrders' => $orderCounts->cancelledOrders,
+                'recentOrders' => $recentOrders
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while loading the dashboard. ' . $e->getMessage());
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */

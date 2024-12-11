@@ -19,8 +19,11 @@ class OrderController extends Controller
     public function index()
     {
         try {
-            $orders = Order::with(['user', 'concessions'])->paginate(10);
-            // $orders = Order::with(['user', 'concessions'])->latest()->paginate(10); // latest first
+            $orders = Order::with(['user', 'concessions'])
+                ->select('orders.*')
+                ->withSum('concessions as total_cost', DB::raw('concessions.price * order_concession.quantity'))
+                ->paginate(10);
+
             return view('orders.index', compact('orders'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while fetching orders. ' . $e->getMessage());
@@ -116,10 +119,11 @@ class OrderController extends Controller
 
             // Bulk attach all concessions
             $order->concessions()->attach($concessionsToAttach);
-            $sendToKitchenTime = Carbon::parse($request->send_to_kitchen_time);
-            $delayInSeconds = $sendToKitchenTime->isPast() ? 0 : $sendToKitchenTime->diffInSeconds(Carbon::now());
 
-            // Dispatch job with the delay
+            $sendToKitchenTime = Carbon::parse($request->send_to_kitchen_time);
+            // abs() to ensure the delay is positive
+            $delayInSeconds = abs($sendToKitchenTime->diffInSeconds(Carbon::now()));
+
             SendOrderToKitchen::dispatch($order)->delay(now()->addSeconds($delayInSeconds));
 
             return redirect()->route('orders.index')->with('success', 'Order created successfully.');
@@ -134,7 +138,10 @@ class OrderController extends Controller
     {
         try {
             if ($order->status === 'Pending') {
-                $order->update(['status' => 'In-Progress']);
+                $order->update([
+                    'status' => 'In-Progress',
+                    'send_to_kitchen_time' => now()
+                ]);
                 return redirect()->route('orders.index')->with('success', 'Order sent to the kitchen.');
             }
 
