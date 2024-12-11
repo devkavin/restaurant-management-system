@@ -5,6 +5,8 @@
         </h2>
     </x-slot>
 
+
+
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -25,6 +27,10 @@
                                     Status
                                 </th>
                                 <th
+                                    class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Received At
+                                </th>
+                                <th
                                     class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions
                                 </th>
@@ -42,7 +48,12 @@
                                         @endforeach
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $order->status }}
+                                        <x-status-label :status="$order->status">
+                                            {{ $order->status }}
+                                        </x-status-label>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ $order->send_to_kitchen_time }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <form action="{{ route('kitchen.orders.update', $order->id) }}" method="POST"

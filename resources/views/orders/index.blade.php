@@ -32,6 +32,9 @@
                                     class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                     Status</th>
                                 <th
+                                    class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                    Total Cost</th>
+                                <th
                                     class="px-6 py-3 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                     Action</th>
                             </tr>
@@ -48,22 +51,13 @@
                                             </span><br>
                                         @endforeach
                                     </td>
-                                    @php
-                                        $statusClasses = [
-                                            'Pending' => 'bg-yellow-100 text-yellow-800',
-                                            'In-Progress' => 'bg-blue-100 text-blue-800',
-                                            'Completed' => 'bg-green-100 text-green-800',
-                                            'Cancelled' => 'bg-red-100 text-red-800',
-                                        ];
-                                        $statusClass = $statusClasses[$order->status] ?? 'bg-gray-100 text-gray-800'; // Default to gray if not found
-                                    @endphp
 
                                     <td class="px-6 py-4 whitespace-no-wrap">
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
+                                        <x-status-label :status="$order->status">
                                             {{ $order->status }}
-                                        </span>
+                                        </x-status-label>
                                     </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap">{{ $order->total_cost }}</td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
                                         @if ($order->status == 'Pending')
                                             <form action="{{ route('orders.send-to-kitchen', $order) }}" method="POST"
