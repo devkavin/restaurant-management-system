@@ -61,6 +61,12 @@ Start the development server:
 php artisan serve
 ```
 
+### 9. **Start the Queue Worker**
+Start the queue worker:
+```bash
+php artisan queue:work
+```
+
 Open your browser and visit [http://localhost:8000](http://localhost:8000).
 
 ---
